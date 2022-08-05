@@ -45,6 +45,7 @@ library(skimr)
 library(stringr)
 ```
 2: Data Importation and Appending
+
 The different CSV files were imported into the RStudio using the read_csv() package
 
 ```{r cyclistic_share_bike datasets}
@@ -107,6 +108,7 @@ ride_data_new <- ride_data_new %>%
   rename(bike_type = rideable_type, user_type = member_casual)
 ```
 3: Data Transformation for further cleaning
+
 Creation of new columns which are the trip_duration (this represent the length of each ride), week and month each ride occured
 ```{r calculate trip duration}
 ride_data_cleaned <- mutate(ride_data_new, trip_duration = as.numeric(ended_at - started_at)/60)
@@ -158,6 +160,7 @@ $ trip_day           <chr> "Sunday", "Saturday", "Saturday", "Saturday", "Sunday
 $ trip_month         <chr> "January", "January", "January", "January", "January", "January", "Janua…
 
 # The "Analyse" Phase
+
 A dive into the cyclistic bike share data for insights
 
 1: Insight into Average ride length of users
