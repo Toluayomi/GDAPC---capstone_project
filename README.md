@@ -96,3 +96,27 @@ $ end_lng            <dbl> -87.72000, -87.69000, -87.70000, -87.69000, -87.70000
 $ member_casual      <chr> "member", "member", "member", "member", "casual", "casual", "member", "me…
 
 The dataset contains 5,595,063 rows distributed in 13 columns representing variables about the bike-share users.
+
+2: Data Cleaning (removing duplicates, nulls and renaming conventions)
+```{r remove duplicates}
+ride_data_new <- distinct(ride_data)
+```
+```{r remove null values and rename variables}
+ride_data_new <- drop_na(ride_data)
+ride_data_new <- ride_data_new %>% 
+  rename(bike_type = rideable_type, user_type = member_casual)
+```
+3: Data Transformation for further cleaning
+Creation of new columns which are the trip_duration (this represent the length of each ride), week and month each ride occured
+```{r calculate trip duration}
+ride_data_cleaned <- mutate(ride_data_new, trip_duration = as.numeric(ended_at - started_at)/60)
+```
+```{r Calculate week and month trip occured}
+ride_data_cleaned <- mutate(ride_data_cleaned, 
+   trip_day = format(as.Date(ride_data_new$started_at), "%A"), 
+   trip_month = format(as.Date(ride_data_cleaned$started_at), "%B"))
+```
+4: Overview of the cleaned dataset
+```{r data preview}
+glimpse(ride_data_cleaned)
+```
