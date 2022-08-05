@@ -120,3 +120,76 @@ ride_data_cleaned <- mutate(ride_data_cleaned,
 ```{r data preview}
 glimpse(ride_data_cleaned)
 ```
+Rows: 4,588,302
+
+Columns: 16
+
+$ ride_id            <chr> "B9F73448DFBE0D45", "457C7F4B5D3DA135", "57C750326F9FDABE", "4D518C65E33…
+
+$ bike_type          <chr> "classic_bike", "electric_bike", "electric_bike", "electric_bike", "clas…
+
+$ started_at         <dttm> 2021-01-24 19:15:38, 2021-01-23 12:57:38, 2021-01-09 15:28:04, 2021-01-…
+
+$ ended_at           <dttm> 2021-01-24 19:22:51, 2021-01-23 13:02:10, 2021-01-09 15:37:51, 2021-01-…
+
+$ start_station_name <chr> "California Ave & Cortez St", "California Ave & Cortez St", "California …
+
+$ start_station_id   <chr> "17660", "17660", "17660", "17660", "17660", "17660", "17660", "17660", …
+
+
+$ end_station_name   <chr> "Wood St & Augusta Blvd", "California Ave & North Ave", "Wood St & Augus…
+
+$ end_station_id     <chr> "657", "13258", "657", "657", "657", "KA1504000135", "KA1504000113", "KA…
+
+$ start_lat          <dbl> 41.90036, 41.90041, 41.90037, 41.90038, 41.90036, 41.90037, 41.90036, 41…
+
+$ start_lng          <dbl> -87.69670, -87.69673, -87.69669, -87.69672, -87.69670, -87.69679, -87.69…
+
+$ end_lat            <dbl> 41.89918, 41.91044, 41.89918, 41.89915, 41.89918, 41.90327, 41.89047, 41…
+
+$ end_lng            <dbl> -87.67220, -87.69689, -87.67218, -87.67218, -87.67220, -87.63446, -87.70…
+
+$ user_type          <chr> "member", "member", "casual", "casual", "casual", "member", "member", "m…
+
+$ trip_duration      <dbl> 7.216667, 4.533333, 9.783333, 8.950000, 10.150000, 20.550000, 6.000000, …
+
+$ trip_day           <chr> "Sunday", "Saturday", "Saturday", "Saturday", "Sunday", "Friday", "Tuesd…
+
+$ trip_month         <chr> "January", "January", "January", "January", "January", "January", "Janua…
+
+# The "Analyse" Phase
+A dive into the cyclistic bike share data for insights
+
+1: Insight into Average ride length of users
+```{r calculate ave_ride_lenght Vs. Users_type }
+avg_trip_duration <- ride_data_cleaned %>%
+  group_by(user_type) %>%
+  summarise(avg_trip_duration = mean(trip_duration))
+```
+```{r ave_ride_length Vs. User_type}
+ggplot(avg_trip_duration)+
+  geom_col(mapping=aes(x = user_type, y = avg_trip_duration, fill = user_type))+
+  labs(title = "Average Trip Duration Vs. User_type", subtitle = "Cyclistic Customer")
+```
+![Average Trip Duration Vs  User_type](https://user-images.githubusercontent.com/106023180/183000770-726385bb-8a51-4083-a538-e1b9d6545f5d.png)
+
+Across the year 2021, the casual bike users spent more time using the bike-share facilities than the users with membership subscription
+  
+ 2:Average trip length by users on days of the week
+ 
+ ```{r avg_ride_length by users Vs.days_of_week}
+avg_trip_week <- ride_data_cleaned %>%
+  group_by (trip_day, user_type) %>%
+  summarise(number_of_trips = n(), average_trip_length = mean(trip_duration),
+            .groups = 'drop') %>%
+arrange(user_type, trip_day)
+```
+```{r visualisation of average_ride_length of users Vs. days_of_week}
+ggplot(avg_trip_week)+
+  geom_col(mapping = aes(x = trip_day, y = average_trip_length, fill = user_type))+
+  labs(title = "Average Weekly Trip Vs. User_type", subtitle = "Cyclistic Customer")
+```
+![Average Weekly Trip Vs  User_type](https://user-images.githubusercontent.com/106023180/183001747-74d73cfc-d2a9-45fd-8179-b491453cfe4c.png)
+
+Across the weeks, it shows that the casual users spent more time using the bikes at the weekends than the week days. This indicates that most of the casual riders use the bikes for leisures and exercises.
+  
