@@ -238,7 +238,13 @@ Summer: June, July, August
 
 Autumn: September, October, November
 
-Over the months of the year, both categories of users ride more during the summer season and the first month of autumn compared to other seasons of the year
+Over the months of the year, both categories of users engaged in more riding activities during summer season and the first month of autumn compared to other seasons of the year. This seasonal change in riding activities can be harnessed by through adequeate marketing strategies for more business opportunities.  
 
-#
+# The "Share" and "Act" Phase
+
+Recommendations:
+---------------------------------------------------------------------------------------------------------
+1. With the preference of most casual riders for weekend rides, startegies should be made in form of designing a campaign awareness membership plans for physical fitness, exercise and overall body wellness to encourage more weekend rides as this thus will help bring the casual riders into the members category.
+2. Discount offers should be made available for weekday ride (since cyclisitc company already have more members using the facilties to commute to work) to avail more casual riders the priviledge to adopt the membership opportunity
+3. Publications in form of Ads, newsletters, should be made available by he marketing team detailing the advantages that comes with the membership suscription plans (discounted prices and physical wellness) to woo the casual riders to embrace the member category
 
