@@ -191,5 +191,54 @@ ggplot(avg_trip_week)+
 ```
 ![Average Weekly Trip Vs  User_type](https://user-images.githubusercontent.com/106023180/183001747-74d73cfc-d2a9-45fd-8179-b491453cfe4c.png)
 
-Across the weeks, it shows that the casual users spent more time using the bikes at the weekends than the week days. This indicates that most of the casual riders use the bikes for leisures and exercises.
+Across the days of week, it shows that the casual users spent more time using the bikes at the weekends than the week days. This indicates that most of the casual riders use the bikes for leisures and exercises.
   
+3: Number of trips by users on weekly basis
+```{r count_of_rides by users Vs. days_of_the_week}
+avg_trip_week <- ride_data_cleaned %>%
+  group_by(trip_day, user_type) %>%
+  summarise(number_of_trips = n(), average_trip_length = mean(trip_duration),
+            .groups = 'drop') %>%
+  arrange(user_type, trip_day)
+```
+```{r visualise count_of_rides by users Vs. days_of_the_week}
+ggplot(avg_trip_week)+
+  geom_col(mapping = aes(x = trip_day, y = number_of_trips, fill = user_type))+
+  labs(title = "Number of Weekly Trip Vs. User_type", subtitle = "Cyclistic Customer") 
+```
+![Number of Weekly Trip Vs  User_type](https://user-images.githubusercontent.com/106023180/183002726-23ddb0c4-7450-45b1-b8b0-0d077f18956a.png)
+
+Here, there were higher numbers of the membership subscribers using the bikes during the weekdays as compared to the casual users. This could be as a result that most members use the facilities as a mode of transportation to commute to work and few spends time biking at weekends
+
+4: Number of trips by users on monthly basis
+
+```{r avg_ride_length by users Vs.month_of_year}
+
+avg_trip_month <- ride_data_cleaned %>%
+  group_by(trip_month, user_type) %>%
+  summarise(number_of_trips = n(), average_trip_length = mean(trip_duration),
+            .groups = 'drop') %>%
+  arrange(user_type, trip_month) 
+```
+```{r visualisation of month_of_year by users Vs. average_ride_length}
+ggplot(avg_trip_month)+
+  geom_col(mapping = aes(x = trip_month, y = number_of_trips, fill = user_type))+
+  labs(title = "Number of Monthly Trip Vs. User_type", subtitle = "Cyclistic Customer")
+```
+![Number of Monthly Trips Vs  User_type](https://user-images.githubusercontent.com/106023180/183003286-08838a64-d79e-422c-9615-48081f41ccf8.png)
+
+Seasons of the year:
+
+a) Winter: December, January, February
+
+
+b) Spring: March, April, May
+
+Summer: June, July, August
+
+Autumn: September, October, November
+
+Over the months of the year, both categories of users ride more during the summer season and the first month of autumn compared to other seasons of the year
+
+#
+
