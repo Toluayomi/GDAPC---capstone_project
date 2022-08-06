@@ -1,0 +1,162 @@
+---
+title: "GDAPC_capstone project"
+author: "Ogunbiyi Tolulope Ayobami"
+date: "2022-08-02"
+output: html_document
+---
+
+## Setting up my environment
+Notes: loading of package 'tidyverse' and 'cyclistic_bike_share' dataset needed for this analysis
+
+```{r loading packages}
+library(tidyverse)
+library(tidyr)
+library(readr)
+library(ggplot2)
+library(lubridate)
+```
+
+## Loading the datasets
+Notes: the 'cyclistic-share-bike'dataset is loaded in separate dataframes from january to december
+
+```{r cyclistic_share_bike datasets}
+
+jan <-read_csv("DAC8_case_study/202101-divvy-tripdata.csv")
+feb <-read_csv("DAC8_case_study/202102-divvy-tripdata.csv")
+mar <-read_csv("DAC8_case_study/202103-divvy-tripdata.csv")
+apr <-read_csv("DAC8_case_study/202104-divvy-tripdata.csv")
+may <-read_csv("DAC8_case_study/202105-divvy-tripdata.csv")
+jun <-read_csv("DAC8_case_study/202106-divvy-tripdata.csv")
+july <-read_csv("DAC8_case_study/202107-divvy-tripdata.csv")
+aug <-read_csv("DAC8_case_study/202108-divvy-tripdata.csv")
+sept <-read_csv("DAC8_case_study/202109-divvy-tripdata.csv")
+oct <-read_csv("DAC8_case_study/202110-divvy-tripdata.csv")
+nov <-read_csv("DAC8_case_study/202111-divvy-tripdata.csv")
+dec <-read_csv("DAC8_case_study/202112-divvy-tripdata.csv")
+```
+## Executing basic data inspection and cleaning
+Notes: checking out the overview of the dataset 
+
+```{r Overview of the dataset}
+glimpse(jan)
+glimpse(feb)
+glimpse(mar)
+glimpse(apr)
+glimpse(may)
+glimpse(jun)
+glimpse(july)
+glimpse(aug)
+glimpse(sept)
+glimpse(oct)
+glimpse(nov)
+glimpse(dec)
+
+```
+## Apending the different dataframes into one
+Notes: dataset are appended into one dataframe for easy readability, naming conventions and for further cleaning to achieve good analysis
+
+```{r binding dataset into a dataframe}
+ride_data <- bind_rows(jan, feb, mar, apr, may, jun, july, aug, sept, oct, nov, dec)
+```
+
+## Basic cleaning of the new dataframe
+Notes: Overview using glimpse, colnames, head, and str
+
+```{r overview of dataframe}
+head(ride_data)
+glimpse(ride_data)
+str(ride_data)
+colnames(ride_data)
+```
+
+## Further cleaning
+Notes: cleaning to ensure data integrity
+```{r remove duplicates}
+ride_data_new <- distinct(ride_data)
+View(ride_data_new)
+```
+
+## Further cleaning
+Notes: cleaning to ensure data integrity
+```{r remove null values and rename variables}
+ride_data_new <- drop_na(ride_data)
+ride_data_new <- ride_data_new %>% 
+  rename(bike_type = rideable_type, user_type = member_casual)
+```
+
+## Insight into calculating the ride length
+```{r calculate trip duration}
+ride_data_cleaned <- mutate(ride_data_new, trip_duration = as.numeric(ended_at - started_at)/60)
+```
+
+## Insight into calculating weeks and month of ride occurence
+```{r Calculate week and month trip occured}
+ride_data_cleaned <- mutate(ride_data_cleaned, 
+   trip_day = format(as.Date(ride_data_new$started_at), "%A"), 
+   trip_month = format(as.Date(ride_data_cleaned$started_at), "%B"))
+```
+
+## Overview of the cleaned dataset
+Notes: a preview of the data after it has been cleaned
+```{r data preview}
+glimpse(ride_data_cleaned)
+```
+
+## A dive into the cyclistic bike share data for insights
+Notes: Insight into Average ride length of users
+```{r calculate ave_ride_lenght Vs. Users_type }
+avg_trip_duration <- ride_data_cleaned %>%
+  group_by(user_type) %>%
+  summarise(avg_trip_duration = mean(trip_duration))
+```
+## Visualise the average ride lenght of Users
+```{r ave_ride_length Vs. User_type}
+ggplot(avg_trip_duration)+
+  geom_col(mapping=aes(x = user_type, y = avg_trip_duration, fill = user_type))+
+  labs(title = "Average Trip Duration Vs. User_type", subtitle = "Cyclistic Customer")
+```
+
+## Average trip length by users on days of the week
+```{r avg_ride_length by users Vs.days_of_week}
+avg_trip_week <- ride_data_cleaned %>%
+  group_by (trip_day, user_type) %>%
+  summarise(number_of_trips = n(), average_trip_length = mean(trip_duration),
+            .groups = 'drop') %>%
+arrange(user_type, trip_day)
+```
+```{r visualisation of average_ride_length of users Vs. days_of_week}
+ggplot(avg_trip_week)+
+  geom_col(mapping = aes(x = trip_day, y = average_trip_length, fill = user_type))+
+  labs(title = "Average Weekly Trip Vs. User_type", subtitle = "Cyclistic Customer")
+```
+
+## Number of trips by users on weekly basis
+```{r count_of_rides by users Vs. days_of_the_week}
+avg_trip_week <- ride_data_cleaned %>%
+  group_by(trip_day, user_type) %>%
+  summarise(number_of_trips = n(), average_trip_length = mean(trip_duration),
+            .groups = 'drop') %>%
+  arrange(user_type, trip_day)
+```
+```{r visualise count_of_rides by users Vs. days_of_the_week}
+ggplot(avg_trip_week)+
+  geom_col(mapping = aes(x = trip_day, y = number_of_trips, fill = user_type))+
+  labs(title = "Number of Weekly Trip Vs. User_type", subtitle = "Cyclistic Customer") 
+```
+
+
+## Number of trips by users on monthly basis
+```{r avg_ride_length by users Vs.month_of_year}
+
+avg_trip_month <- ride_data_cleaned %>%
+  group_by(trip_month, user_type) %>%
+  summarise(number_of_trips = n(), average_trip_length = mean(trip_duration),
+            .groups = 'drop') %>%
+  arrange(user_type, trip_month) 
+```
+```{r visualisation of month_of_year by users Vs. average_ride_length}
+ggplot(avg_trip_month)+
+  geom_col(mapping = aes(x = trip_month, y = number_of_trips, fill = user_type))+
+  labs(title = "Average Monthly Trip Vs. User_type", subtitle = "Cyclistic Customer")
+```
+
